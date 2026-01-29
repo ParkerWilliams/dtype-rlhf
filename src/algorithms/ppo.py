@@ -232,7 +232,8 @@ def compute_ppo_loss_with_clip_diagnostics(
 
         # EMPIRICAL discretization measurement
         # Low count indicates discretized optimization landscape
-        "ratio_unique_in_range": in_range.unique().numel() if len(in_range) > 0 else 0,
+        # NOTE: .float() required because unique() not implemented for BF16
+        "ratio_unique_in_range": in_range.float().unique().numel() if len(in_range) > 0 else 0,
         "ratio_in_range_count": len(in_range),
     }
 
