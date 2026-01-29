@@ -1,0 +1,34 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.egg-info
+.eggs
+dist
+build
+.venv
+venv
+.env
+
+# Results (mount as volume instead)
+results/
+test_results/
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache
+.coverage
+htmlcov
