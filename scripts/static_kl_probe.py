@@ -109,6 +109,21 @@ def probe_kl_precision(
                     diff_true = lp_true - lp_fp32
 
                     # === Metrics ===
+                    # Subsample for quantile computation (avoids "tensor too large" error)
+                    # With vocab_size ~50k and seq_len ~512, full tensor is 25M+ elements
+                    max_samples = 100_000
+                    diff_sim_flat = diff_sim.abs().flatten()
+                    diff_true_flat = diff_true.abs().flatten()
+
+                    if diff_sim_flat.numel() > max_samples:
+                        # Random subsample for quantile
+                        indices = torch.randperm(diff_sim_flat.numel(), device=diff_sim_flat.device)[:max_samples]
+                        sim_p99 = torch.quantile(diff_sim_flat[indices], 0.99).item()
+                        true_p99 = torch.quantile(diff_true_flat[indices], 0.99).item()
+                    else:
+                        sim_p99 = torch.quantile(diff_sim_flat, 0.99).item()
+                        true_p99 = torch.quantile(diff_true_flat, 0.99).item()
+
                     results.append({
                         "seq_len": seq_len,
                         "temperature": temp,
@@ -118,14 +133,14 @@ def probe_kl_precision(
                         "sim_zero_exact_rate": (diff_sim == 0).float().mean().item(),
                         "sim_abs_err_mean": diff_sim.abs().mean().item(),
                         "sim_abs_err_max": diff_sim.abs().max().item(),
-                        "sim_abs_err_p99": torch.quantile(diff_sim.abs().flatten(), 0.99).item(),
+                        "sim_abs_err_p99": sim_p99,
 
                         # True BF16 forward (end-to-end)
                         "true_near_zero_mass": (diff_true.abs() < 1e-6).float().mean().item(),
                         "true_zero_exact_rate": (diff_true == 0).float().mean().item(),
                         "true_abs_err_mean": diff_true.abs().mean().item(),
                         "true_abs_err_max": diff_true.abs().max().item(),
-                        "true_abs_err_p99": torch.quantile(diff_true.abs().flatten(), 0.99).item(),
+                        "true_abs_err_p99": true_p99,
 
                         # Compare: how much does kernel path add to error?
                         "kernel_contribution": (
