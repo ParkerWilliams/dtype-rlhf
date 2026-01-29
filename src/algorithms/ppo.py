@@ -113,7 +113,8 @@ def compute_returns_and_advantages(
 
     # Create per-token rewards: zero everywhere except terminal
     # CRITICAL: Only assign rewards for samples that have valid tokens
-    rewards_per_token = torch.zeros_like(values)  # [B, T-1]
+    # CRITICAL: Use FP32 for rewards_per_token since GAE is computed in FP32
+    rewards_per_token = torch.zeros(B, T, device=device, dtype=torch.float32)
     valid_batch_idx = torch.arange(B, device=device)[has_tokens]
     rewards_per_token[valid_batch_idx, terminal_idx[has_tokens]] = rewards[has_tokens].float()
 
