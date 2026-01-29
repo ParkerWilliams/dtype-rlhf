@@ -1,7 +1,7 @@
 #!/bin/bash
 # RunPod deployment script
 #
-# Use with pytorch/pytorch:2.1.2-cuda12.1-cudnn8-runtime base image
+# Use with pytorch/pytorch:2.4.0-cuda12.1-cudnn9-runtime base image
 #
 # Quick start on RunPod:
 #   1. Create a GPU pod with the PyTorch container

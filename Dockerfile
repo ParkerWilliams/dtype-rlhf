@@ -9,7 +9,7 @@
 # Run with quick test:
 #   docker run --gpus all -v $(pwd)/results:/workspace/results rlhf-precision --quick
 
-FROM pytorch/pytorch:2.1.2-cuda12.1-cudnn8-runtime
+FROM pytorch/pytorch:2.4.0-cuda12.1-cudnn9-runtime
 
 # Set working directory
 WORKDIR /workspace/dtype-rlhf

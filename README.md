@@ -9,7 +9,7 @@ Unlike standard supervised training, RLHF has multiple interacting components (p
 ### RunPod (Recommended)
 
 1. Create a GPU pod with the **PyTorch container**:
-   - Image: `pytorch/pytorch:2.1.2-cuda12.1-cudnn8-runtime`
+   - Image: `pytorch/pytorch:2.4.0-cuda12.1-cudnn9-runtime`
    - GPU: H100 80GB recommended, A100 40GB minimum
 
 2. Clone and run:
