@@ -155,7 +155,7 @@ def compute_kl_with_diagnostics(
 
         # Surrogate penalty (what we optimize)
         "kl_penalty_mean": kl_penalty.item(),
-        "kl_penalty_p99": torch.quantile(valid_penalties, 0.99).item() if len(valid_penalties) > 0 else 0.0,
+        "kl_penalty_p99": torch.quantile(valid_penalties.float(), 0.99).item() if len(valid_penalties) > 0 else 0.0,
         "kl_penalty_max": valid_penalties.max().item() if len(valid_penalties) > 0 else 0.0,
 
         # Precision diagnostics
