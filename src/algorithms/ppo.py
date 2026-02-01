@@ -336,6 +336,8 @@ class PPOTrainer:
 
         # Get hidden states for value head
         hidden_states = self.policy.get_hidden_states(batch.input_ids)
+        # Cast to value head dtype for mixed-precision configs (e.g., BF16 policy + FP32 value head)
+        hidden_states = hidden_states.to(self.value_head.head.weight.dtype)
         values = self.value_head(hidden_states)[:, :-1]  # [B, T-1] - ALIGNED
 
         # 2. Get reference log probs (frozen, same token selection)
